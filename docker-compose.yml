@@ -10,24 +10,12 @@ services:
       - node_modules:/home/node/app/node_modules
     working_dir: /home/node/app/
     command: sh -c "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm dev"
-    depends_on:
-      - postgres
     env_file:
       - .env
     environment:
-      - DATABASE_URI=postgres://postgres:postgres@postgres:5432/postgres
+      - DATABASE_URI=file:./playground.db
 
-  postgres:
-    restart: always
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    volumes:
-      - pgdata:/var/lib/postgresql
-    ports:
-      - "5432:5432"
+  # postgres service removed for SQLite usage
 
   caddy:
     image: caddy:2
@@ -42,7 +30,7 @@ services:
       - payload
 
 volumes:
-  pgdata:
+  # pgdata volume removed as it is no longer needed
   node_modules:
   caddy_data:
   caddy_config:
